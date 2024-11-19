@@ -6,11 +6,11 @@
 void print_user_login_register_menu()
 {
 		system("cls");
-		printf("-----------------------\n");
+		printf("--------------------\n");
 		printf("|**** %u.登录 **** |\n", LOG);
 		printf("|**** %u.注册 **** |\n", REG);
 		printf("|**** %u.退出 **** |\n", EXI);
-		printf("-----------------------\n\n");
+		printf("--------------------\n\n");
 		printf("请选择>:");
 	
 }
@@ -81,7 +81,6 @@ int user_login(library* pLib)
 void user_register(library* pLib)
 {
 	char account[MAX_ACCOUNT];
-	char password[MAX_PASSWPRD];
 	int if_change_check_way = 0;//是否改变了检查方式
 	seek_situation seek;
 	
@@ -124,7 +123,7 @@ void user_register(library* pLib)
 	
 	input("请输入密码:>", pLib->user_data[pLib->now_user_capacity].password, MAX_PASSWPRD);
 	
-	//更新教材数据
+	//更新用户数据
 	pLib->user_data[pLib->now_user_capacity].is_deleted = 't';
 	pLib->now_user_capacity++;
 	pLib->show_user_capacity++;

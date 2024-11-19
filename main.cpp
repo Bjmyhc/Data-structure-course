@@ -4,7 +4,7 @@
 
 int main()
 {
-	//定义系统
+	//定义系统w
 	library lib;
 	//初始化系统
 	init_library(&lib);
