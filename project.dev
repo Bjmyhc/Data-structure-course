@@ -44,7 +44,7 @@ UseUTF8 = 0
 
 
 [Unit1]
-FileName = main.cpp
+FileName = library.cpp
 CompileCpp = 1
 Folder = 源文件
 Compile = 1
@@ -77,19 +77,6 @@ SyncProduct = 1
 
 
 [Unit2]
-FileName = tool.cpp
-CompileCpp = 1
-Folder = 源文件
-Compile = 1
-Link = 1
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit3]
 FileName = tool.h
 CompileCpp = 0
 Folder = 头文件
@@ -102,8 +89,21 @@ FileEncoding = PROJECT
 RealEncoding = gbk
 
 
+[Unit3]
+FileName = qm.txt
+CompileCpp = 0
+Folder = 其他文件
+Compile = 0
+Link = 0
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
 [Unit4]
-FileName = user.h
+FileName = library.h
 CompileCpp = 0
 Folder = 头文件
 Compile = 0
@@ -129,32 +129,6 @@ RealEncoding = gbk
 
 
 [Unit6]
-FileName = qm.txt
-CompileCpp = 1
-Folder = 其他文件
-Compile = 0
-Link = 0
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit7]
-FileName = books.txt
-CompileCpp = 1
-Folder = 其他文件
-Compile = 0
-Link = 0
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit8]
 FileName = book.h
 CompileCpp = 0
 Folder = 头文件
@@ -167,8 +141,8 @@ FileEncoding = PROJECT
 RealEncoding = gbk
 
 
-[Unit9]
-FileName = library.h
+[Unit7]
+FileName = user.h
 CompileCpp = 0
 Folder = 头文件
 Compile = 0
@@ -180,8 +154,34 @@ FileEncoding = PROJECT
 RealEncoding = gbk
 
 
+[Unit8]
+FileName = main.cpp
+CompileCpp = 1
+Folder = 源文件
+Compile = 1
+Link = 1
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
+[Unit9]
+FileName = tool.cpp
+CompileCpp = 1
+Folder = 源文件
+Compile = 1
+Link = 1
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
 [Unit10]
-FileName = library.cpp
+FileName = book.cpp
 CompileCpp = 1
 Folder = 源文件
 Compile = 1
@@ -194,11 +194,11 @@ RealEncoding = gbk
 
 
 [Unit11]
-FileName = book.cpp
+FileName = books.txt
 CompileCpp = 1
-Folder = 源文件
-Compile = 1
-Link = 1
+Folder = 其他文件
+Compile = 0
+Link = 0
 Priority = 1000
 OverrideBuildCmd = 0
 BuildCmd = 

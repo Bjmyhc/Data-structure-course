@@ -1,5 +1,5 @@
 #include "tool.h"
-
+#include <time.h>
 /*输入检查函数*/
 //---------------提示-------输出数组-------数组大小
 void input(char* hint, char* output, size_t size)
@@ -125,4 +125,33 @@ void revise_screen_color(library* pLib)
 	} while (cChoose_color_key != 13);//回车键ASCII码值，完成修改 
 	
 	printf("\033[?25h"); //显示光标
+	
+
+}
+
+/*打印警告信息函数*/
+void warn_printf(int power)
+{
+	if(power > 0)
+		printf("您已经是管理员了！\n");
+	else
+		printf("抱歉，你没有权限进行此操作！\n");
+	printf("按任意键继续...");
+	getchar();
+}
+
+/*获取本地时间*/
+void local_time(char* local_time) 
+{
+	time_t t = time(NULL);
+	struct tm *tm_info = localtime(&t);
+	
+	if (tm_info == NULL) 
+	{
+		printf("Local time error\n");
+		getchar();
+		return;
+	}	
+	strftime(local_time, MAX_TIME, "%Y-%m-%d-%H-%M", tm_info);
+
 }

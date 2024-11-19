@@ -45,6 +45,7 @@ int user_login_register(library* pLib)
 	}while(user_choice != EXIT);
 	return 0;
 }
+
 //用户登录
 int user_login(library* pLib)
 {
@@ -80,7 +81,7 @@ int user_login(library* pLib)
 //用户注册
 void user_register(library* pLib)
 {
-	char account[MAX_ACCOUNT];
+	char space[MAX_ACCOUNT];
 	int if_change_check_way = 0;//是否改变了检查方式
 	seek_situation seek;
 	
@@ -89,7 +90,7 @@ void user_register(library* pLib)
 	//录入用户信息
 	do
 	{
-		input("请输入用户名:>", account, MAX_ACCOUNT);
+		input("请输入用户名:>", space, MAX_ACCOUNT);
 		
 		//调用精确查找用户
 		if (pLib->setup.seek_way == 0)
@@ -98,7 +99,7 @@ void user_register(library* pLib)
 			if_change_check_way = 1;
 		}
 		//检查用户是否存在重复
-		find_user_by_account(pLib, account, &seek);
+		find_user_by_account(pLib, space, &seek);
 //		printf("数量：%d\n", seek.num);
 		//如果改变了检查方式，则改回来
 		if (if_change_check_way == 1)
@@ -109,7 +110,7 @@ void user_register(library* pLib)
 		//如果不存在，则录入
 		if (seek.num == 0)
 		{
-			strcpy(pLib->user_data[pLib->now_user_capacity].account, account);
+			strcpy(pLib->user_data[pLib->now_user_capacity].account, space);
 			break;
 		}
 		else
@@ -124,6 +125,11 @@ void user_register(library* pLib)
 	input("请输入密码:>", pLib->user_data[pLib->now_user_capacity].password, MAX_PASSWPRD);
 	
 	//更新用户数据
+	if(0 == strcmp(space, "admin"))
+		pLib->user_data[pLib->now_user_capacity].power = 2;
+	else
+		pLib->user_data[pLib->now_user_capacity].power = 0;
+	
 	pLib->user_data[pLib->now_user_capacity].is_deleted = 't';
 	pLib->now_user_capacity++;
 	pLib->show_user_capacity++;
@@ -137,7 +143,30 @@ void user_register(library* pLib)
 	_getch();
 }
 
-/*加载教材信息*/
+//用户激活管理员
+void user_activation(library* pLib)
+{
+	char space[MAX_TIME];
+	char ret_time[MAX_TIME];
+	
+	input("请输入激活密钥:>",space, MAX_TIME);
+	local_time(ret_time);
+	
+	if(0 == strcmp(space, ret_time))
+	{
+		pLib->user_data[pLib->login_user_location].power = 1;
+		printf("激活成功，您现在已获取管理员资格！\n");
+//		printf("local:%d, power:%d",pLib->login_user_location, pLib->user_data[pLib->login_user_location].power);
+	}
+	else
+	{
+		printf("激活失败！\n");
+	}
+	printf("按任意键继续...");
+	_getch();
+}
+
+/*加载用户信息*/
 void load_user_information(library* pLib)
 {
 	//创建book类型结构体
@@ -157,8 +186,6 @@ void load_user_information(library* pLib)
 	{
 		check_user_capacity(pLib);
 		pLib->user_data[pLib->now_user_capacity] = tmp;	
-		pLib->user_data[pLib->now_user_capacity].is_deleted = 't';
-		pLib->user_data[pLib->now_user_capacity].power = false;
 		pLib->now_user_capacity++;
 		pLib->show_user_capacity++;
 	}

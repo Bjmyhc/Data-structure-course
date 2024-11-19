@@ -12,6 +12,8 @@ void check_user_capacity(library* pLib);
 int user_login(library* pLib);
 //用户注册
 void user_register(library* pLib);
+//用户激活管理员
+void user_activation(library* pLib);
 //查找用户名
 void find_user_by_account(const library* pLib, char account[MAX_ACCOUNT], seek_situation* situation);
 //保存用户信息

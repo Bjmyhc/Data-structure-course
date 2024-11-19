@@ -5,9 +5,10 @@
 ////////////////////////////无功能函数/////////////////////////////////////
 
 /*打印主菜单*/
-void print_main_book_menu()
+void print_main_book_menu(int power)
 {
 	system("cls");
+	printf("现在时间：%s。您当前用户权限为：%s\n","2024-11-11", power > 1 ? "超管": power > 0 ? "管理员" : "普通用户" );
 	printf("-----------------------\n");
 	printf("|**** %u.添加教材 **** |\n", ADD);
 	printf("|**** %u.删除教材 **** |\n", DEL);
@@ -15,6 +16,7 @@ void print_main_book_menu()
 	printf("|**** %u.修改信息 **** |\n", CHANGE);
 	printf("|**** %u.显示所有 **** |\n", SHOW);
 	printf("|**** %u.系统设置 **** |\n", SETUP);
+	printf("|**** %u.激活密钥 **** |\n", POWER);
 	printf("|**** %u.退出账号 **** |\n", EXIT);
 	printf("-----------------------\n\n");
 	printf("请选择>:");
@@ -103,11 +105,12 @@ void print_set_up_menu(library* pLib)
 void main_book_menu(library* pLib)
 {
 	main_choice user_choice;//用户选择
-	bool power = pLib->user_data[pLib->login_user_location].power;//获取登录用户的权限
+	
 	
 	do
 	{
-		print_main_book_menu();//打印主菜单
+		int power = pLib->user_data[pLib->login_user_location].power;//获取登录用户的权限
+		print_main_book_menu(power);//打印主菜单
 		
 		user_choice = (main_choice)99;//初始化选项，防止错误值乱入功能
 		scanf(" %u", (unsigned int*)&user_choice);	//获取用户输入选项
@@ -124,28 +127,25 @@ void main_book_menu(library* pLib)
 			destroyed_library(pLib);
 			break;
 		case ADD:
-			//添加教材信息
-			add_book_information(pLib);
+			power > 0 ? add_book_information(pLib) : warn_printf(power);//添加教材信息
 			break;
 		case DEL:
-			//删除教材信息
-			dele_book_information(pLib);
+			power > 0 ? dele_book_information(pLib) : warn_printf(power);//删除教材信息
 			break;
 		case SEEK:
-			//查找教材信息
-			seek_book_information(pLib);
+			seek_book_information(pLib);//查找教材信息
 			break;
 		case CHANGE:
-			//修改教材信息
-			change_book_information(pLib);
+			power > 0 ? change_book_information(pLib) : warn_printf(power);//修改教材信息
 			break;
 		case SHOW:
-			//展示教材信息
-			show_book_information(pLib);
+			show_book_information(pLib);//展示教材信息
 			break;
 		case SETUP:
-			//教材系统设置
-			system_set_up(pLib);
+			power > 0 ? system_set_up(pLib) : warn_printf(power);//教材系统设置
+			break;
+		case POWER:
+			power > 0 ? warn_printf(power) : user_activation(pLib);//激活密钥
 			break;
 		default:
 			//	printf("输入无效，请重新输入!");
@@ -1824,7 +1824,6 @@ void load_book_information(library* pLib)
 	{
 		check_capacity(pLib);
 		pLib->data[pLib->now_capacity] = tmp;
-		pLib->data[pLib->now_capacity].is_deleted = 't';
 		pLib->now_capacity++;
 		pLib->show_capacity++;
 	}

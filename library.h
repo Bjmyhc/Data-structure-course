@@ -21,6 +21,7 @@
 #define MAX_ACCOUNT 20
 #define MAX_PASSWPRD 20
 
+
 //主界面选项
 typedef enum {
 	EXI,
@@ -36,7 +37,8 @@ typedef enum {
 	SEEK,
 	CHANGE,
 	SHOW,
-	SETUP
+	SETUP,
+	POWER
 } main_choice;
 
 //查找菜单选项
@@ -96,7 +98,7 @@ typedef struct User
 	char account[MAX_ACCOUNT];		//用户名
 	char password[MAX_PASSWPRD];	//密码
 	char is_deleted;				//标记字段，t表示存在，f表示已删除
-	bool power;						//权限
+	int power;						//权限
 } user;
 
 //基本配置
