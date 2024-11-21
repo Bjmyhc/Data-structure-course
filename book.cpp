@@ -16,8 +16,10 @@ void print_main_book_menu(int power)
 	printf("|**** %u.修改信息 **** |\n", CHANGE);
 	printf("|**** %u.显示所有 **** |\n", SHOW);
 	printf("|**** %u.系统设置 **** |\n", SETUP);
-	printf("|**** %u.激活密钥 **** |\n", POWER);
-	printf("|**** %u.退出账号 **** |\n", EXIT);
+	if(power > 1)
+		printf("|**** %u.后台管理 **** |\n", USER);
+//	printf("|**** %u.激活密钥 **** |\n", POWER);
+//	printf("|**** %u.退出账号 **** |\n", EXIT);
 	printf("-----------------------\n\n");
 	printf("请选择>:");
 }
@@ -70,38 +72,9 @@ void print_part_of_function_menu()
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      \n");
 	printf("请选择:>");
 }
-/*打印设置菜单*/
-void print_set_up_menu(library* pLib)
-{
-	system("cls");
-	printf("         设置\n");
-	printf("~~~~~~~~~~~~~~~~~~~~~~~      \n");
-	printf("修改↘                    \n");
-	printf("  %u.默认容量：%d         \n", SET_DEFAULT_CAPACITY, pLib->setup.default_capacity);
-	printf("  %u.单次扩容：%d         \n", SET_EXPANSION, pLib->setup.expansion);
-	printf("  %u.每页展示：%d         \n", SET_SHOWNUM, pLib->setup.show_num);
-	printf("  %u.查找精度：%s         \n", SET_SEEK_WAY, pLib->setup.seek_way > 0 ? "精确" : "模糊");
-	printf("~~~~~~~~~~~~~~~~~~~~~~~      \n");
-	printf("导入↘                    \n");
-	printf("  %u.导入教材(.txt)\n", SET_IMPORT);
-	printf("  %u.检查日期(y-m-d)：%s  \n", SET_CHECK_DATE, pLib->setup.check_date > 0 ? "是" : "否");
-	printf("~~~~~~~~~~~~~~~~~~~~~~~      \n");
-	printf("导出↘                    \n");
-	printf("  %u.导出教材(.txt)\n", SET_EXPORT);
-	printf("~~~~~~~~~~~~~~~~~~~~~~~      \n");
-	printf("操作↘                    \n");
-	printf("  %u.备份所有数据            \n", SET_BAK_DATA);
-	printf("  %u.清空所有数据            \n", SET_DEL_LIB);
-	printf("  %u.恢复备份数据         \n", SET_RECOVER_DATA_BAK);
-	printf("~~~~~~~~~~~~~~~~~~~~~~~      \n");
-	printf("个性化↘                    \n");
-	printf("  %u.修改屏幕颜色             \n", SET_COLOR);
-	printf("~~~~~~~~~~~~~~~~~~~~~~~      \n");
-	printf("  %u.回到主页             \n", SET_EXIT);
-	printf("~~~~~~~~~~~~~~~~~~~~~~~      \n\n");
-	printf("请选择:>");
-}
 
+
+//主菜单
 void main_book_menu(library* pLib)
 {
 	main_choice user_choice;//用户选择
@@ -118,14 +91,14 @@ void main_book_menu(library* pLib)
 		
 		switch (user_choice)
 		{
-		case EXIT:
-			//保存教材信息
-			save_book_information(pLib);
-			//保存配置数据
-			save_setup_information(pLib);
-			//销毁系统
-			destroyed_library(pLib);
-			break;
+//		case EXIT:
+//			//保存教材信息
+//			save_book_information(pLib);
+//			//保存配置数据
+//			save_setup_information(pLib);
+//			//销毁系统
+//			destroyed_library(pLib);
+//			break;
 		case ADD:
 			power > 0 ? add_book_information(pLib) : warn_printf(power);//添加教材信息
 			break;
@@ -142,16 +115,20 @@ void main_book_menu(library* pLib)
 			show_book_information(pLib);//展示教材信息
 			break;
 		case SETUP:
-			power > 0 ? system_set_up(pLib) : warn_printf(power);//教材系统设置
+			if(0 != system_set_up(pLib))//教材系统设置
+				return;
 			break;
-		case POWER:
-			power > 0 ? warn_printf(power) : user_activation(pLib);//激活密钥
-			break;
+//		case POWER:
+//			power > 0 ? warn_printf(power) : user_activation(pLib);//激活密钥
+//			break;
+//		case USER:
+//			power > 1 ? user_control(pLib) : warn_printf(power,1);//后台操作
+//			break;
 		default:
 			//	printf("输入无效，请重新输入!");
 			break;
 		}
-	}while(user_choice != EXIT);
+	}while(1);
 }
 
 
@@ -602,184 +579,9 @@ void sort_book_by_price(const library* pLib, book* copy)
 
 
 
-/*限制长度输出*/
-void limit_printf(const char* format, const char* var, int limit)
-{
-	limit *= 2;//方便匹配汉字
-	
-	int length = strlen(var);
-	int space = 0;
-	int i = 0;
-	char temp[100] = { 0 };
-	char temp_bak[100] = { 0 };
-	char* ptr = temp_bak;
-	const char* sign[] = { "“", "·", "”", "\"", "—", "-", "π", NULL };
-	char* found = NULL;
-	strncpy(temp, var, limit);
-	temp[limit] = '\0';
-	strcpy(temp_bak, temp);
-	printf(format, temp);
-	
-	if (length > limit)
-	{
-		while (sign[i] != NULL)
-		{
-			while ((found = strstr(ptr, sign[i])) != NULL)
-			{
-				space++;
-				ptr = found + 1;
-			}
-			i++;
-		}
-		
-		printf("...");
-	}
-	else
-		printf("   ");
-	
-	while (space--)
-		printf(" ");
-}
 
-/*备份数据*/
-void back_information()
-{
-	if (CopyFile(".\\Library\\book_information.dat", ".\\Library\\book_information.dat.bak", FALSE))
-		printf("\n备份旧数据成功\n");
-	else
-		printf("\n备份旧数据失败\n");
-}
 
-/*改变默认容量*/
-void change_default_capacity(library* pLib)
-{
-	int new_default_capacity = 0;
-	
-	do
-	{
-		printf("输入新默认容量:>");
-		scanf(" %d", &new_default_capacity);
-		getchar();
-		
-		if (new_default_capacity > 0)
-		{
-			if (pLib->now_capacity != 0)
-			{
-				printf("存在教材，无法修改\n");
-				printf("按任意键继续...");
-				_getch();
-				return;
-			}
-			else
-			{
-				pLib->setup.default_capacity = new_default_capacity;
-				//执行扩容操作
-				book* ptr = (book*)realloc(pLib->data, (pLib->setup.default_capacity) * sizeof(book));
-				//如果扩容失败
-				if (ptr == NULL)
-				{
-					perror("realloc_capacity_by_situp");
-				}
-				else
-				{
-					pLib->data = ptr;
-					pLib->total_capacity = pLib->setup.default_capacity;
-					printf("扩容成功！\n");
-					return;
-				}
-				printf("按任意键继续...");
-				_getch();
-			}
-		}
-		else
-		{
-			printf("请输入有效值\n");
-		}
-	}
-	while (1);
-}
 
-/*改变每次扩容量*/
-void change_expansion(library* pLib)
-{
-	int new_expansion = 0;
-	do
-	{
-		printf("输入新扩容容量:>");
-		scanf("%d", &new_expansion);
-		getchar();
-		
-		if (new_expansion > 0)
-		{
-			pLib->setup.expansion = new_expansion;
-			printf("修改成功！\n");
-			break;
-		}
-		else
-		{
-			printf("请输入有效值\n");
-		}
-	}
-	while (1);
-}
-
-/*改变每页展示数量*/
-void change_show_num(library* pLib)
-{
-	int new_show_num = 0;
-	do
-	{
-		printf("输入每页展示数:>");
-		scanf("%d", &new_show_num);
-		getchar();
-		if (new_show_num > 0)
-		{
-			pLib->setup.show_num = new_show_num;
-			printf("修改成功！\n");
-			break;
-		}
-		else
-		{
-			printf("请输入有效值\n");
-		}
-	}
-	while (1);
-}
-
-/*恢复备份文件*/
-void recover_data_bak(library* pLib)
-{
-	if (if_input())
-	{
-		//将备份文件重命名为过渡文件
-		int result = rename(".\\Library\\book_information.dat.bak", ".\\Library\\book_information.date");
-		//如果命名成功
-		if (result == 0)
-		{
-			//将数据文件重命名为备份文件
-			rename(".\\Library\\book_information.dat", ".\\Library\\book_information.dat.bak");
-			//将过渡文件重命名为数据文件
-			int re = rename(".\\Library\\book_information.date", ".\\Library\\book_information.dat");
-			
-			if (re == 0)
-			{
-				printf("恢复成功！");
-				init_library(pLib);
-			}
-			else
-			{
-				printf("恢复失败！");
-			}
-		}
-		else
-		{
-			printf("暂无备份！\n");
-			
-		}
-		printf("按任意键继续...");
-		_getch();
-	}
-}
 
 /*书籍容量扩容*/
 void check_capacity(library* pLib)
@@ -806,25 +608,7 @@ void check_capacity(library* pLib)
 	}
 }
 
-/*清除数据*/
-void delete_library(library* pLib)
-{
-	if (if_input())
-	{
-		if (pLib->now_capacity == 0)
-		{
-			printf("教材库为空\n");
-		}
-		else
-		{
-			remove(".\\Library\\book_information.dat");
-			printf("删除成功 ");
-			init_library(pLib);
-		}
-		printf("按任意键继续...");
-		_getch();
-	}
-}
+
 ///////////////////////////////菜单功能函数////////////////////////////////
 
 /*添加教材信息*/
@@ -1709,74 +1493,7 @@ void export_book_information(library* pLib)
 	
 }
 
-//系统设置
-void system_set_up(library* pLib)
-{
-	set_up_choice user_choice;
-	
-	do
-	{
-		//打印设置菜单
-		print_set_up_menu(pLib);
-		
-		scanf("%u", (unsigned int*)&user_choice);
-		getchar();
-		
-		switch (user_choice)
-		{
-		case SET_EXIT:
-			return;
-		case SET_DEFAULT_CAPACITY:
-			change_default_capacity(pLib);
-			break;
-		case SET_EXPANSION:
-			change_expansion(pLib);
-			break;
-		case SET_SHOWNUM:
-			change_show_num(pLib);
-			break;
-		case SET_SEEK_WAY:
-			pLib->setup.seek_way = pLib->setup.seek_way > 0 ? 0 : 1;
-			break;
-		case SET_RECOVER_DATA_BAK:
-			recover_data_bak(pLib);
-			break;
-		case SET_DEL_LIB:
-			delete_library(pLib);
-			break;
-		case SET_IMPORT:
-			//导入教材信息
-			import_book_information(pLib);
-			break;
-		case SET_CHECK_DATE:
-			if (pLib->setup.check_date == 1)
-				pLib->setup.check_date = 0;
-			else
-				pLib->setup.check_date = 1;
-			break;
-		case SET_EXPORT:
-			//导出教材信息
-			export_book_information(pLib);
-			break;
-		case SET_BAK_DATA:
-			//备份数据
-			back_information();
-			printf("----------\n");
-			printf("按任意键继续...");
-			_getch();
-			break;
-		case SET_COLOR:
-			revise_screen_color(pLib);
-			break;
-		default:
-			printf("\a");
-			//Sleep(400);//暂停400毫秒
-			break;
-		}
-	}
-	while (user_choice != SET_EXIT);
-	
-}
+
 
 /*保存教材信息*/
 void save_book_information(library* pLib)

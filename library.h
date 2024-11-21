@@ -29,17 +29,7 @@ typedef enum {
 	REG
 } user_lr_choice;
 
-//书籍操作菜单选项
-typedef enum {
-	EXIT,
-	ADD,
-	DEL,
-	SEEK,
-	CHANGE,
-	SHOW,
-	SETUP,
-	POWER
-} main_choice;
+
 
 //查找菜单选项
 typedef enum {
@@ -58,48 +48,51 @@ typedef enum {
 	A_PAGE
 } seek_and_sort_choice;
 
+//操作菜单选项
+typedef enum {
+	EXIT,
+	ADD,
+	DEL,
+	SEEK,
+	CHANGE,
+	SHOW,
+	SETUP,
+	USER
+//	POWER
+} main_choice;
+
 //设置选项
 typedef enum{
 	SET_EXIT,
-	SET_DEFAULT_CAPACITY,
-	SET_EXPANSION,
-	SET_SHOWNUM,
+//	SET_DEFAULT_CAPACITY,
+//	SET_EXPANSION,
+	SET_SHOW_NUM,
 	SET_SEEK_WAY,
-	SET_IMPORT,
-	SET_CHECK_DATE,
-	SET_EXPORT,
-	SET_BAK_DATA,
-	SET_DEL_LIB,
-	SET_RECOVER_DATA_BAK,
-	SET_COLOR
+//	SET_IMPORT,
+//	SET_CHECK_DATE,
+//	SET_EXPORT,
+//	SET_BAK_DATA,
+//	SET_DEL_LIB,
+//	SET_RECOVER_DATA_BAK,
+	SET_COLOR,
+	SET_POWER,
+	SET_PASSWORD,
+	SET_EXIT_SYSTEM,
+	SET_HIGH_SETUP
 } set_up_choice;
 
-//教材日期
-typedef struct Date {
-	int y;
-	int m;
-	int d;
-} date;
-
-//教材信息
-typedef struct Book {
-	struct Date date;		//日期结构体
-	float price;			//	价格
-	char name[MAX_NAME];	//	书名
-	char author[MAX_AUTHOR];//	作者
-	char press[MAX_PRESS];  //	出版社
-	char isbn[MAX_ISBN];    //	ISBN
-	char is_deleted; 		// 标记字段，t表示存在，f表示已删除
-} book;
-
-//用户组信息
-typedef struct User
-{
-	char account[MAX_ACCOUNT];		//用户名
-	char password[MAX_PASSWPRD];	//密码
-	char is_deleted;				//标记字段，t表示存在，f表示已删除
-	int power;						//权限
-} user;
+//高级设置选项
+typedef enum{
+	HIGH_SET_EXIT,
+	HIGH_SET_DEFAULT_CAPACITY,
+	HIGH_SET_EXPANSION,
+	HIGH_SET_IMPORT,
+	HIGH_SET_CHECK_DATE,
+	HIGH_SET_EXPORT,
+	HIGH_SET_BAK_DATA,
+	HIGH_SET_DEL_LIB,
+	HIGH_SET_RECOVER_DATA_BAK,
+} high_set_up_choice;
 
 //基本配置
 typedef struct Setting
@@ -138,7 +131,7 @@ void init_library(library* pLib);
 
 
 //系统设置
-void system_set_up(library* pLib);
+int system_set_up(library* pLib);
 //加载配置数据
 void load_setup_information(library* pLib);
 //保存配置数据

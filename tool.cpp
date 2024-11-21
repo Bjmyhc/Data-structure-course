@@ -130,12 +130,16 @@ void revise_screen_color(library* pLib)
 }
 
 /*打印警告信息函数*/
-void warn_printf(int power)
+void warn_printf(int power,int limit)
 {
-	if(power > 0)
-		printf("您已经是管理员了！\n");
-	else
-		printf("抱歉，你没有权限进行此操作！\n");
+	if(limit == 0)
+		if(power > 0)
+			printf("您已经是管理员了！\n");
+		else
+			printf("抱歉，你没有权限进行此操作！\n");
+	else if(limit == 1)
+		if(power < 2)
+			printf("抱歉，你没有权限进行此操作！\n");
 	printf("按任意键继续...");
 	getchar();
 }
@@ -155,3 +159,44 @@ void local_time(char* local_time)
 	strftime(local_time, MAX_TIME, "%Y-%m-%d-%H-%M", tm_info);
 
 }
+
+/*限制长度输出*/
+void limit_printf(const char* format, const char* var, int limit)
+{
+	limit *= 2;//方便匹配汉字
+	
+	int length = strlen(var);
+	int space = 0;
+	int i = 0;
+	char temp[100] = { 0 };
+	char temp_bak[100] = { 0 };
+	char* ptr = temp_bak;
+	const char* sign[] = { "“", "·", "”", "\"", "—", "-", "π", NULL };
+	char* found = NULL;
+	strncpy(temp, var, limit);
+	temp[limit] = '\0';
+	strcpy(temp_bak, temp);
+	printf(format, temp);
+	
+	if (length > limit)
+	{
+		while (sign[i] != NULL)
+		{
+			while ((found = strstr(ptr, sign[i])) != NULL)
+			{
+				space++;
+				ptr = found + 1;
+			}
+			i++;
+		}
+		
+		printf("...");
+	}
+	else
+		printf("   ");
+	
+	while (space--)
+		printf(" ");
+}
+
+void null_function();

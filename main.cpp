@@ -9,6 +9,7 @@ int main()
 	//初始化系统
 	init_library(&lib);
 	//进入登录_注册界面
+	
 	do
 	{
 		if(user_login_register(&lib) == 1)

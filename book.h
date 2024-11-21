@@ -2,6 +2,28 @@
 #define __BOOK_H__
 
 #include "library.h"
+
+//教材日期
+typedef struct Date {
+	int y;
+	int m;
+	int d;
+} date;
+
+//教材信息
+typedef struct Book {
+	struct Date date;		//日期结构体
+	float price;			//	价格
+	char name[MAX_NAME];	//	书名
+	char author[MAX_AUTHOR];//	作者
+	char press[MAX_PRESS];  //	出版社
+	char isbn[MAX_ISBN];    //	ISBN
+	char is_deleted; 		// 标记字段，t表示存在，f表示已删除
+} book;
+
+
+
+
 //打印书籍操作菜单
 void print_main_book_menu();
 //书籍操作菜单

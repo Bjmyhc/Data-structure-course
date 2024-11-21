@@ -21,7 +21,7 @@ int user_login_register(library* pLib)
 	do{
 		print_user_login_register_menu();	//打印登录注册菜单
 		user_choice = (user_lr_choice)99;	//初始化选项，防止错误值乱入功能
-		scanf(" %u", &user_choice);			//获取用户输入选项
+		scanf(" %u", (unsigned int*)&user_choice);			//获取用户输入选项
 		getchar();
 		
 		switch (user_choice) {
@@ -42,7 +42,7 @@ int user_login_register(library* pLib)
 			//	printf("输入无效，请重新输入!");
 			break;
 		}
-	}while(user_choice != EXIT);
+	}while(1);
 	return 0;
 }
 

@@ -2,6 +2,15 @@
 #define __USER_H__
 #include "library.h"
 
+//用户组信息
+typedef struct User
+{
+	char account[MAX_ACCOUNT];		//用户名
+	char password[MAX_PASSWPRD];	//密码
+	char is_deleted;				//标记字段，t表示存在，f表示已删除
+	int power;						//权限
+} user;
+
 //登录_注册界面
 int user_login_register(library* pLib);
 //加载用户信息
