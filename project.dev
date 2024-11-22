@@ -44,7 +44,7 @@ UseUTF8 = 0
 
 
 [Unit1]
-FileName = user.cpp
+FileName = library.cpp
 CompileCpp = 1
 Folder = 源文件
 Compile = 1
@@ -77,97 +77,6 @@ SyncProduct = 1
 
 
 [Unit2]
-FileName = setup.cpp
-CompileCpp = 1
-Folder = 源文件
-Compile = 1
-Link = 1
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit3]
-FileName = main.cpp
-CompileCpp = 1
-Folder = 源文件
-Compile = 1
-Link = 1
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit4]
-FileName = tool.h
-CompileCpp = 0
-Folder = 头文件
-Compile = 0
-Link = 0
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit5]
-FileName = library.h
-CompileCpp = 0
-Folder = 头文件
-Compile = 0
-Link = 0
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit6]
-FileName = qm.txt
-CompileCpp = 1
-Folder = 其他文件
-Compile = 0
-Link = 0
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit7]
-FileName = library.cpp
-CompileCpp = 1
-Folder = 源文件
-Compile = 1
-Link = 1
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit8]
-FileName = user.h
-CompileCpp = 0
-Folder = 头文件
-Compile = 0
-Link = 0
-Priority = 1000
-OverrideBuildCmd = 0
-BuildCmd = 
-FileEncoding = PROJECT
-RealEncoding = gbk
-
-
-[Unit9]
 FileName = book.h
 CompileCpp = 0
 Folder = 头文件
@@ -180,10 +89,10 @@ FileEncoding = PROJECT
 RealEncoding = gbk
 
 
-[Unit10]
-FileName = books.txt
+[Unit3]
+FileName = tool.h
 CompileCpp = 0
-Folder = 其他文件
+Folder = 头文件
 Compile = 0
 Link = 0
 Priority = 1000
@@ -193,7 +102,46 @@ FileEncoding = PROJECT
 RealEncoding = gbk
 
 
-[Unit11]
+[Unit4]
+FileName = user.cpp
+CompileCpp = 1
+Folder = 源文件
+Compile = 1
+Link = 1
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
+[Unit5]
+FileName = user.h
+CompileCpp = 0
+Folder = 头文件
+Compile = 0
+Link = 0
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
+[Unit6]
+FileName = library.h
+CompileCpp = 0
+Folder = 头文件
+Compile = 0
+Link = 0
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
+[Unit7]
 FileName = control.cpp
 CompileCpp = 1
 Folder = 源文件
@@ -206,7 +154,33 @@ FileEncoding = PROJECT
 RealEncoding = gbk
 
 
-[Unit12]
+[Unit8]
+FileName = setup.cpp
+CompileCpp = 1
+Folder = 源文件
+Compile = 1
+Link = 1
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
+[Unit9]
+FileName = main.cpp
+CompileCpp = 1
+Folder = 源文件
+Compile = 1
+Link = 1
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
+[Unit10]
 FileName = book.cpp
 CompileCpp = 1
 Folder = 源文件
@@ -219,12 +193,38 @@ FileEncoding = PROJECT
 RealEncoding = gbk
 
 
-[Unit13]
+[Unit11]
+FileName = qm.txt
+CompileCpp = 1
+Folder = 其他文件
+Compile = 0
+Link = 0
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
+[Unit12]
 FileName = tool.cpp
 CompileCpp = 1
 Folder = 源文件
 Compile = 1
 Link = 1
+Priority = 1000
+OverrideBuildCmd = 0
+BuildCmd = 
+FileEncoding = PROJECT
+RealEncoding = gbk
+
+
+[Unit13]
+FileName = books.txt
+CompileCpp = 1
+Folder = 其他文件
+Compile = 0
+Link = 0
 Priority = 1000
 OverrideBuildCmd = 0
 BuildCmd = 
