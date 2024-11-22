@@ -5,10 +5,13 @@
 ////////////////////////////无功能函数/////////////////////////////////////
 
 /*打印主菜单*/
-void print_main_book_menu(int power)
+void print_main_book_menu(const library* pLib)
 {
+	int power = pLib->user_data[pLib->login_user_location].power;
+	
 	system("cls");
-	printf("现在时间：%s。您当前用户权限为：%s\n","2024-11-11", power > 1 ? "超管": power > 0 ? "管理员" : "普通用户" );
+	printf("您当前用户[%s],权限为：%s\n",pLib->user_data[pLib->login_user_location].account, 
+		power > 1 ? "超管": power > 0 ? "管理员" : "普通用户" );
 	printf("-----------------------\n");
 	printf("|**** %u.添加教材 **** |\n", ADD);
 	printf("|**** %u.删除教材 **** |\n", DEL);
@@ -83,7 +86,7 @@ void main_book_menu(library* pLib)
 	do
 	{
 		int power = pLib->user_data[pLib->login_user_location].power;//获取登录用户的权限
-		print_main_book_menu(power);//打印主菜单
+		print_main_book_menu(pLib);//打印主菜单
 		
 		user_choice = (main_choice)99;//初始化选项，防止错误值乱入功能
 		scanf(" %u", (unsigned int*)&user_choice);	//获取用户输入选项
@@ -121,9 +124,9 @@ void main_book_menu(library* pLib)
 //		case POWER:
 //			power > 0 ? warn_printf(power) : user_activation(pLib);//激活密钥
 //			break;
-//		case USER:
-//			power > 1 ? user_control(pLib) : warn_printf(power,1);//后台操作
-//			break;
+		case USER:
+			power > 1 ? user_control(pLib) : warn_printf(power,1);//后台操作
+			break;
 		default:
 			//	printf("输入无效，请重新输入!");
 			break;
@@ -1493,7 +1496,26 @@ void export_book_information(library* pLib)
 	
 }
 
-
+/*初始化书籍数据*/
+void init_book_data(library* pLib)
+{
+	//分配默认容量
+	pLib->data = (book*)malloc(pLib->setup.default_capacity * sizeof(book));
+	
+	if(pLib->data == NULL)
+	{
+		perror("init_library:init_data");
+		printf("按任意键继续...");
+		_getch();
+		return;
+	}
+	
+	//初始化书籍容量
+	pLib->now_capacity = 0;
+	pLib->show_capacity = 0;
+	pLib->total_capacity = pLib->setup.default_capacity;
+	load_book_information(pLib);
+}
 
 /*保存教材信息*/
 void save_book_information(library* pLib)

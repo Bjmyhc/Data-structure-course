@@ -14,6 +14,31 @@ void print_user_login_register_menu()
 		printf("请选择>:");
 	
 }
+
+/*打印查找_修改方式菜单 */
+void print_find_and_change_user_menu()
+{
+	printf("------------------------\n");
+	printf("|**** %u.密码     **** |\n", CHANGE_PASSWORD);
+	printf("|**** %u.权限     **** |\n", CHANGE_POWER);
+	printf("|**** %u.回到主页 **** |\n", CHANGE_EXIT);
+	printf("------------------------\n\n");
+	printf("请选择>:");
+}
+
+/*打印部分用户功能菜单*/
+void print_part_of_user_function_menu()
+{
+	printf("\n                               菜单\n");
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      \n");
+	printf("快捷跳转↘                    \n");
+	printf("  %u.首页  %u.尾页  %u.指定页                     \n", FIRST_PAGE, LAST_PAGE, A_PAGE);
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      \n");
+	printf("  %u.回到主页                     \n", BY_EXIT);
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      \n");
+	printf("请选择:>");
+}
+//用户登录或注册
 int user_login_register(library* pLib)
 {
 	user_lr_choice user_choice;//用户选择
@@ -28,6 +53,8 @@ int user_login_register(library* pLib)
 		case EXI:
 			//保存用户信息
 			save_user_information(pLib);
+			//销毁系统
+			destroyed_library(pLib);
 			exit(0);
 		case LOG:
 			if(user_login(pLib))
@@ -166,6 +193,25 @@ void user_activation(library* pLib)
 	_getch();
 }
 
+//初始化用户数据
+void init_user_data(library* pLib)
+{
+	//分配用户空间
+	pLib->user_data = (user*)malloc(DEFAULT_USER*sizeof(user));
+	if(pLib->user_data == NULL)
+	{
+		perror("init_library:init_user");
+		printf("按任意键继续...");
+		_getch();
+		return;
+	}
+	//初始化用户容量
+	pLib->now_user_capacity = 0;
+	pLib->show_user_capacity = 0;
+	pLib->total_user_capacity = DEFAULT_USER;//后续决定是否集成到基本配置
+	load_user_information(pLib);
+}
+
 /*加载用户信息*/
 void load_user_information(library* pLib)
 {
@@ -218,6 +264,64 @@ void check_user_capacity(library* pLib)
 	}
 }
 
+
+/*删除用户信息*/
+void user_delete(library* pLib)
+{
+	if (if_input())
+	{
+		seek_situation seek;
+		char account[MAX_ACCOUNT];
+		int if_change_check_way = 0;
+		
+		if (pLib->show_user_capacity == 0)
+		{
+			printf("暂无注册用户\n");
+		}
+		else
+		{
+			printf("请输入想删除教材的用户名:>");
+			scanf("%s", account);
+			getchar();
+			
+			//调用精确查找isbn
+			if (pLib->setup.seek_way == 0)
+			{
+				pLib->setup.seek_way = 1;
+				if_change_check_way = 1;
+			}
+			//检查isbn是否存在重复
+			find_user_by_account(pLib, account, &seek);
+			//如果改变了检查方式，则改回来
+			if (if_change_check_way == 1)
+			{
+				pLib->setup.seek_way = 0;
+				if_change_check_way = 0;
+			}
+			
+			if (seek.num == 0)
+			{
+				printf("该用户不存在\n");
+				
+			}
+			else
+			{
+				//执行删除操作
+				pLib->user_data[seek.location[0]].is_deleted = 'f';
+				pLib->show_user_capacity--;
+				printf("删除成功\n");
+			}
+			//释放查找时创建的动态数组
+			free(seek.location);
+			seek.location = NULL;
+		}
+		
+		printf("按任意键继续...");
+		_getch();
+	}
+	
+}
+
 /*查找用户名*/
 void find_user_by_account(const library* pLib, char account[MAX_ACCOUNT], seek_situation* situation)
 {
@@ -258,6 +362,319 @@ void find_user_by_account(const library* pLib, char account[MAX_ACCOUNT], seek_s
 	}
 	
 }
+
+/*查找用户信息*/
+void user_seek(library* pLib)
+{
+	if (if_input())
+	{
+		seek_situation seek;
+		char account[MAX_ACCOUNT];
+		int if_change_check_way = 0;
+		
+		if (pLib->show_user_capacity == 0)
+		{
+			printf("暂无注册用户\n");
+		}
+		else
+		{
+			printf("请输入想查找的用户名:>");
+			scanf("%s", account);
+			getchar();
+			
+			//调用精确查找isbn
+			if (pLib->setup.seek_way == 0)
+			{
+				pLib->setup.seek_way = 1;
+				if_change_check_way = 1;
+			}
+			//查找用户
+			find_user_by_account(pLib, account, &seek);
+			//如果改变了检查方式，则改回来
+			if (if_change_check_way == 1)
+			{
+				pLib->setup.seek_way = 0;
+				if_change_check_way = 0;
+			}
+			
+			if (seek.num == 0)
+			{
+				printf("该用户不存在\n");
+				
+			}
+			else
+			{
+				//打印用户数据
+				printf("-----     \n");
+				printf("用户：%s\n密码：%s\n权限：%d\n",
+					pLib->user_data[seek.location[0]].account,
+					pLib->user_data[seek.location[0]].password,
+					pLib->user_data[seek.location[0]].power);
+				printf("-----      \n");
+			}
+			//释放查找时创建的动态数组
+			free(seek.location);
+			seek.location = NULL;
+		}
+		
+		printf("按任意键继续...");
+		_getch();
+	}
+	
+}
+
+
+/*修改用户信息*/
+void user_change(library* pLib)
+{
+	if (if_input())
+	{
+		seek_situation seek;
+		char account[MAX_ACCOUNT];
+		int if_change_check_way = 0;
+		
+		if (pLib->show_user_capacity == 0)
+		{
+			printf("暂无用户\n");
+			printf("按任意键继续...");
+			_getch();
+			return;
+		}
+		else
+		{
+			change_choice user_choice;
+			
+			printf("请输入被修改用户名:>");
+			scanf("%s", account);
+			getchar();
+			
+			if(0 == strcmp(account, "admin"))
+			{
+				printf("超管不支持此功能");
+				printf("按任意键继续...");
+				_getch();
+				return;
+			}
+			
+			
+			//精确查找教材
+			if (pLib->setup.seek_way == 0)
+			{
+				pLib->setup.seek_way = 1;
+				if_change_check_way = 1;
+			}
+			find_user_by_account(pLib, account, &seek);
+			if (if_change_check_way == 1)
+			{
+				pLib->setup.seek_way = 0;
+				if_change_check_way = 0;
+			}
+			
+			if (seek.num == 0)
+			{
+				printf("该用户不存在\n");
+				printf("按任意键继续...");
+				_getch();
+				return;
+			}
+			else
+			{
+				do
+				{
+					system("cls");
+					printf("你想修改什么数据:\n");
+					//打印修改菜单
+					print_find_and_change_user_menu();
+					
+					user_choice = (change_choice)99;
+					int power = 0;
+					
+					scanf(" %u", (unsigned int*)&user_choice);
+					getchar();
+					
+					switch (user_choice)
+					{
+					case CHANGE_EXIT:
+						return;
+					case CHANGE_PASSWORD:
+						input("输入新密码:>", pLib->user_data[seek.location[0]].password, 20);
+						break;
+					case CHANGE_POWER:
+						do{
+							printf("输入新权限:>");
+							scanf("%d", &power);
+							if(power < 0 || power >2)
+								printf("请输入正确的值!\n");
+							else if(2 == power)
+								printf("超管仅能有一位！\n");
+							else
+								break;
+						}while(1);
+						//更新权限
+						pLib->user_data[seek.location[0]].power = power;
+						break;
+					default:
+						continue;
+					}
+					printf("修改成功,");
+					getchar();
+					break;
+				}
+				while (user_choice != CHANGE_EXIT);
+			}
+			//释放查找时创建的动态数组
+			free(seek.location);
+			seek.location = NULL;
+		}
+		printf("按任意键继续...");
+		_getch();
+	}
+	
+}
+
+/*打印用户信息*/
+void user_print(const library* pLib)
+{
+	// 创建数组的副本
+	user* copy = (user*)malloc(pLib->total_user_capacity * sizeof(user));
+	if (copy == NULL)
+	{
+		perror("show_user");
+		printf("按任意键继续...");
+		_getch();
+		return;
+	}
+	// 复制数据
+	memcpy(copy, pLib->user_data, pLib->total_user_capacity * sizeof(user)); 
+	
+	char fn_choice;
+	int print_user = 0;//所打印用户（i）
+	int now_page = 1;//当前页码
+	int page = 0;
+	int now_page_form_user_num = 0;//当前页的起始数据位置（下标）
+	int total_page = pLib->now_user_capacity / pLib->setup.show_num + (pLib->now_user_capacity % pLib->setup.show_num > 0 ? 1 : 0);
+	change_page:
+	system("cls");
+	
+	if (pLib->show_user_capacity == 0)
+	{
+		printf("暂无用户\n");
+		printf("按任意键继续...");
+		_getch();
+		free(copy);
+		copy = NULL;
+		return;
+	}
+	else
+	{
+		
+		printf("方向键翻页，'~'键呼出菜单\n");
+		
+		printf("------------------------------------------------------------\n");
+		printf(" %-6s|%-23s|%-23s|%-2s\n", "序号", "用户", "密码", "权限");
+		printf("------------------------------------------------------------\n");
+		for (print_user = now_page_form_user_num; print_user < now_page_form_user_num + pLib->setup.show_num; print_user++)
+		{
+			if (copy[print_user].is_deleted== 't')
+			{
+				//printf(" %-6d\t|%-50.48s\t|\t%-32s\t|%-32s\t|%04d-%02d-%02d\t|%-15s\t|%-6f\n",
+				printf(" %-6d", print_user + 1);
+				printf("|");
+				//printf("%s ",copy[print_book].name);
+				limit_printf("%-20s", copy[print_user].account, 10);
+				printf("|");
+				//printf("%-20s ",copy[print_book].author);
+				limit_printf("%-20s", copy[print_user].password, 10);
+				printf("|");
+				printf("%d\n", copy[print_user].power);
+//				printf("|");
+//				printf("%04d-", copy[print_user].date.y);
+//				printf("%02d-", copy[print_user].date.m);
+//				printf("%02d ", copy[print_user].date.d);				
+			}
+		}
+		printf("------------------------------------------------------------\n");
+		printf("\n				-当前%d/%d页- \n", now_page, total_page);
+	}
+	
+	do
+	{
+		//翻页或退出
+		fn_choice = _getch();
+		
+		if (fn_choice == '~' || fn_choice == '`')
+		{
+			seek_and_sort_choice user_choice;
+			
+			do
+			{
+				print_part_of_user_function_menu();
+				scanf("%u", (unsigned int*)&user_choice);
+				getchar();
+				
+				switch (user_choice)
+				{
+				case BY_EXIT:
+					return;
+				case FIRST_PAGE:
+					now_page = 1;
+					now_page_form_user_num = 0;
+					goto change_page;
+					break;
+				case LAST_PAGE:
+					now_page = total_page;
+					now_page_form_user_num = (total_page - 1) * pLib->setup.show_num;
+					goto change_page;
+					break;
+				case A_PAGE:
+					printf("请输入指定页:>");
+					scanf(" %d", &page);
+					getchar();
+					if (page > 0 && page <= total_page)
+					{
+						now_page = page;
+						now_page_form_user_num = (page - 1) * pLib->setup.show_num;
+						goto change_page;
+					}
+					break;
+				default:
+					system("cls");
+					printf("输入无效，请重新输入！\a");
+					//Sleep(400);//暂停400毫秒
+					break;
+				}
+				
+			}
+			while (user_choice != BY_EXIT);    //退出程序
+		}
+		else if (fn_choice == 72 || fn_choice == 80 || fn_choice == 75 || fn_choice == 77)//key：上 72 || 下 80 || 左 75 || 右 77
+		{
+			switch (fn_choice)
+			{
+			case 72:
+			case 75:
+				if (now_page > 1)
+				{
+					now_page--;
+					now_page_form_user_num -= pLib->setup.show_num;
+				}
+				break;
+			case 77:
+			case 80:
+				if (now_page < total_page)
+				{
+					now_page++;
+					now_page_form_user_num += pLib->setup.show_num;
+				}
+				break;
+			}
+			goto change_page;
+		}
+	}while (1);
+}
+
+
+
 
 /*保存用户信息*/
 void save_user_information(library* pLib)

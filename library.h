@@ -77,7 +77,7 @@ typedef enum{
 	SET_COLOR,
 	SET_POWER,
 	SET_PASSWORD,
-	SET_EXIT_SYSTEM,
+	SET_EXIT_ACCOUNT,
 	SET_HIGH_SETUP
 } set_up_choice;
 
@@ -137,4 +137,6 @@ void load_setup_information(library* pLib);
 //保存配置数据
 void save_setup_information(library* pLib);
 
+//销毁系统
+void destroyed_library(library* pLib);
 #endif

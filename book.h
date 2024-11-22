@@ -28,8 +28,6 @@ typedef struct Book {
 void print_main_book_menu();
 //书籍操作菜单
 void main_book_menu(library* pLib);
-//销毁系统
-void destroyed_library(library* pLib);
 //添加教材信息
 void add_book_information(library* pLib);
 //删除教材信息
@@ -41,6 +39,8 @@ void change_book_information(library* pLib);
 //打印教材信息
 void show_book_information(const library* pLib);
 
+//初始化书籍数据
+void init_book_data(library* pLib);
 //保存教材信息
 void save_book_information(library* pLib);
 //加载教材信息

@@ -33,7 +33,7 @@ void print_set_up_menu(library* pLib)
 	printf("账号↘                  \n");
 	printf("  %u.激活密钥           \n", SET_POWER);
 	printf("  %u.修改密码           \n", SET_PASSWORD);
-	printf("  %u.退出账号           \n", SET_EXIT_SYSTEM);
+	printf("  %u.退出账号           \n", SET_EXIT_ACCOUNT);
 	printf("~~~~~~~~~~~~~~~~~~~~~~~ \n");
 	if(pLib->user_data[pLib->login_user_location].power > 0){
 		printf("  %u.高级设置           \n", SET_HIGH_SETUP);
@@ -224,13 +224,15 @@ void delete_library(library* pLib)
 		else
 		{
 			remove(".\\Library\\book_information.dat");
+			
 			printf("删除成功 ");
-			init_library(pLib);
+			init_book_data(pLib);
 		}
 		printf("按任意键继续...");
 		_getch();
 	}
 }
+
 void change_password(library* pLib)
 {
 
@@ -315,12 +317,13 @@ void high_system_set_up(library* pLib)
 //系统设置
 int system_set_up(library* pLib)
 {
-	int power = pLib->user_data[pLib->login_user_location].power;
+	int power = 0;
 	
 	set_up_choice user_choice;
 	
 	do
 	{
+		power = pLib->user_data[pLib->login_user_location].power;
 		//打印设置菜单
 		print_set_up_menu(pLib);
 		
@@ -379,14 +382,18 @@ int system_set_up(library* pLib)
 		case SET_PASSWORD:
 			change_password(pLib);
 			break;
-		case SET_EXIT_SYSTEM:
-			//保存教材信息
-			save_book_information(pLib);
-			//保存配置数据
-			save_setup_information(pLib);
-			//销毁系统
-			destroyed_library(pLib);
-			return 1;
+		case SET_EXIT_ACCOUNT:
+			if(if_input())
+			{
+				//保存教材信息
+				save_book_information(pLib);
+				//保存配置数据
+				save_setup_information(pLib);
+	//			//销毁系统
+	//			destroyed_library(pLib);
+				return 1;
+			}
+			break;
 		case SET_HIGH_SETUP:
 			power > 0 ? high_system_set_up(pLib) : warn_printf(power);
 			break;
