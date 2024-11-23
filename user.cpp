@@ -674,7 +674,176 @@ void user_print(const library* pLib)
 }
 
 
+//导入用户信息
+void user_import(library* pLib)
+{
+	if(if_input())
+	{
+		seek_situation seek;
+		char new_users[128];
+		char line_information[256];
+		char account[MAX_ACCOUNT] = {0};
+		char password[MAX_PASSWPRD] = {0};
+		int power;
+		
+		int error_lack = 0;			//	数据缺失错误
+		int error_repeat = 0;		//	数据重复错误
+		int error_power = 0;		//	权限错误数量
+		int how_many_user = 0;		//	导入用户数量
+		int import_flag = 0;		//	导入标志量
+		int if_change_check_way = 0;//	是否改变查找方式
+		
+		printf("请输入导入文件名称:>");
+		scanf(" %s", new_users);
+		getchar();
+		FILE* pRead = fopen(new_users, "r");
+		
+		//判断读情况
+		if (pRead == NULL)
+		{
+			perror("[Error]文件不存在\a");
+			printf("----------\n");
+			printf("按任意键继续...");
+			_getch();
+			return;
+		}
+		
+		//执行导入操作
+		while (fgets(line_information, 256, pRead) != NULL)//一行一行读取
+		{
+			seek.num = 0;
+			power = -1;
+			how_many_user++;//记录用户数
+			
+			//判断是否检查数据完整
+			if(sscanf(line_information, "%*d %s %s %d", account, password, &power) != 3)
+			{
+				printf("[Error_line:%d]: 数据缺失\n", how_many_user);
+				error_lack++;
+//				getchar();
+			}
+			else
+			{
+				check_user_capacity(pLib);
+				
+				//精确查找用户
+				if (pLib->setup.seek_way == 0)
+				{
+					pLib->setup.seek_way = 1;
+					if_change_check_way = 1;
+				}
+				find_user_by_account(pLib, account, &seek);
+				if (if_change_check_way == 1)
+				{
+					pLib->setup.seek_way = 0;
+					if_change_check_way = 0;
+				}
+				
+				if(seek.num == 0)
+				{
+					if(0 == strcmp(account, "admin"))
+					{
+						printf("[Error_line:%d]: 用户名非法\n", how_many_user);
+						error_power++;
+					}
+					else if(power < 0 || power > 1)//进一步检查权限
+					{
+						printf("[Error_line:%d]: 权限数值错误\n", how_many_user);
+						error_power++;
+					}
+					else
+					{
+						strcpy(pLib->user_data[pLib->now_user_capacity].account, account);
+						strcpy(pLib->user_data[pLib->now_user_capacity].password, password);
+						pLib->user_data[pLib->now_user_capacity].power = power;
+						
+						//更新数据：标签，现在数量，展示数量
+						pLib->user_data[pLib->now_user_capacity].is_deleted = 't';
+						pLib->now_user_capacity++;
+						pLib->show_user_capacity++;
+						
+					}
+				
+				}
+				else
+				{
+					printf("[Error]%s: 已存在\n", account);
+					error_repeat++;
+				}
+			}
+		}
+		//情况归纳
+		printf("----------\n");
+		if (error_power + error_lack + error_repeat == how_many_user)
+			printf("导入失败,");
+		else
+			printf("导入成功,");
+		
+		printf("一共%d个用户，发生了%d处错误.\n错误归纳:[权限错误：%d, 缺失错误：%d, 重复错误：%d]\n", how_many_user, error_power + error_lack + error_repeat, error_power, error_lack, error_repeat);
+		printf("----------\n");
+		
+		//释放查找时创建的动态数组
+		free(seek.location);
+		seek.location = NULL;
+		
+		//关闭文件流
+		fclose(pRead);
+		pRead = NULL;
+		printf("按任意键继续...");
+		_getch();
+	}
+	
+}
 
+//导出用户信息
+void user_export(library* pLib)
+{
+	if(if_input())
+	{
+		int i = 0;
+		int id = 0;
+		
+		if(pLib->show_user_capacity == 0)
+		{
+			printf("暂无用户\n");
+			printf("按任意键继续...");
+			_getch();
+			return;
+		}
+		else
+		{
+			//执行导出操作
+			FILE* pwrite = fopen(".\\Library\\用户.txt", "w");//打开文件
+			//如果打开失败
+			if (pwrite == NULL)
+			{
+				perror("export_book");
+				printf("按任意键继续...");
+				_getch();
+				return;
+			}
+			//保存信息
+			for(i = 0; i < pLib->now_user_capacity; i++)
+			{
+				if(pLib->user_data[i].is_deleted == 't')
+				{
+					fprintf(pwrite, "%d\t%s\t%s\t%d\n",
+						id,
+						pLib->user_data[i].account,
+						pLib->user_data[i].password,
+						pLib->user_data[i].power);
+					id++;
+				}
+			}
+			printf("导出成功！按任意键继续...");
+			_getch();
+			//关闭文件流
+			fclose(pwrite);
+			pwrite = NULL;
+			return;
+		}
+	}
+}
 
 /*保存用户信息*/
 void save_user_information(library* pLib)

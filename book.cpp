@@ -1340,6 +1340,7 @@ void import_book_information(library* pLib)
 		//执行导入操作
 		while (fgets(line_information, 256, pRead) != NULL)//一行一行读取
 		{
+			seek.num = 0;
 			how_many_book++;//书籍总数量增加
 			
 			if (sscanf(line_information, "%*d %s %s %s %s %s %f", name, author, press, date, isbn, &price) != 6)//检查元素有效个数
@@ -1349,7 +1350,7 @@ void import_book_information(library* pLib)
 			}
 			else
 			{
-				//检查通讯录容量,已满就扩容
+				//检查容量,已满就扩容
 				check_capacity(pLib);
 				
 				//精确查找教材
@@ -1409,9 +1410,7 @@ void import_book_information(library* pLib)
 						pLib->now_capacity++;
 						pLib->show_capacity++;
 						
-						//释放查找时创建的动态数组
-						free(seek.location);
-						seek.location = NULL;
+						
 					}
 				}
 				else
@@ -1419,6 +1418,7 @@ void import_book_information(library* pLib)
 					printf("[Error]%s: 已存在\n", name);
 					error_repeat++;
 				}
+				
 			}
 			
 		}
@@ -1431,6 +1431,11 @@ void import_book_information(library* pLib)
 		
 		printf("一共%d本教材，发生了%d处错误.\n错误归纳:[格式错误：%d, 缺失错误：%d, 重复错误：%d]\n", how_many_book, error_form + error_lack + error_repeat, error_form, error_lack, error_repeat);
 		printf("----------\n");
+		
+		//释放查找时创建的动态数组
+		free(seek.location);
+		seek.location = NULL;
+		
 		//关闭文件流
 		fclose(pRead);
 		pRead = NULL;
@@ -1458,7 +1463,7 @@ void export_book_information(library* pLib)
 		else
 		{
 			//执行导出操作
-			FILE* pwrite = fopen(".\\Library\\教材管理系统.txt", "w");//打开文件
+			FILE* pwrite = fopen(".\\Library\\教材.txt", "w");//打开文件
 			//如果打开失败
 			if (pwrite == NULL)
 			{

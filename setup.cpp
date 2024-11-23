@@ -203,7 +203,7 @@ void recover_data_bak(library* pLib)
 	}
 }
 
-/*备份数据*/
+/*备份教材数据*/
 void back_information()
 {
 	if (CopyFile(".\\Library\\book_information.dat", ".\\Library\\book_information.dat.bak", FALSE))

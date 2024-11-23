@@ -11,6 +11,7 @@ typedef struct User
 	int power;						//权限
 } user;
 
+//后台菜单
 typedef enum
 {
 	CONTROL_EXIT,
@@ -22,12 +23,23 @@ typedef enum
 	CONTROL_SETUP
 } control_choice;
 
+//后台修改用户
 typedef enum
 {
 	CHANGE_EXIT,
 	CHANGE_PASSWORD,
 	CHANGE_POWER
 } change_choice;
+
+//后台设置
+typedef enum
+{
+	USER_EXIT,
+	USER_IMPORT,
+//	USER_CHECK,
+	USER_EXPORT
+} user_setup_choice;
+
 //登录_注册界面
 int user_login_register(library* pLib);
 //加载用户信息
@@ -40,6 +52,7 @@ int user_login(library* pLib);
 void user_register(library* pLib);
 //用户激活管理员
 void user_activation(library* pLib);
+
 //删除用户信息
 void user_delete(library* pLib);
 //查找用户信息
@@ -48,6 +61,11 @@ void user_seek(library* pLib);
 void user_change(library* pLib);
 //打印用户信息
 void user_print(const library* pLib);
+//导入用户信息
+void user_import(library* pLib);
+//导出用户信息
+void user_export(library* pLib);
+
 //根据用户名查找
 void find_user_by_account(const library* pLib, char account[MAX_ACCOUNT], seek_situation* situation);
 //初始化用户数据

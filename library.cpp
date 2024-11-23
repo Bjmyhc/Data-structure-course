@@ -51,8 +51,9 @@ void load_setup_information(library* pLib)
 		pLib->setup.expansion = 1000;			//每次扩容容量
 		pLib->setup.show_num = 12;				//每页展示数量
 		pLib->setup.seek_way = 0;				//查找精度
-		pLib->setup.check_date = 0;				//导入时检查日期
-		strcpy(pLib->setup.color, "color 01");	//屏幕颜色
+		pLib->setup.check_date = 0;				//导入教材时检查日期
+//		pLib->setup.check_user_data = 0;		//导入用户时检查密码、权限
+		strcpy(pLib->setup.color, "color 0A");	//屏幕颜色
 		save_setup_information(pLib);			//保存一下
 	}
 	//设置屏幕颜色

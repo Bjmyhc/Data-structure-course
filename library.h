@@ -101,7 +101,8 @@ typedef struct Setting
 	int expansion;			//每次扩容容量
 	int show_num;			//每页展示数量
 	int seek_way;			//查找精度
-	int check_date;			//导入时检查日期
+	int check_date;			//导入教材时检查日期
+	int check_user_data;	//导入用户时检查数据
 	char color[10];			//屏幕颜色
 } setup;
 
